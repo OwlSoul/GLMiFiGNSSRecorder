@@ -14,6 +14,10 @@ Just copy the `src` folder to any place you like. You can check `deploy.sh` for 
 | stop-gps.sh  | Sends the command to stop GNSS recorder |
 | read-gps.lua | Reads GNSS data from /dev/ttyUSB1, stores it once per minute |
 
+## Launch
+
+To read GPS data, just launch `read-gps.lua` script. Check `launch` folder for examples of how to launch this script in background on startup (via rc.local), and how to keep it alive (with 1 minute of data loss tolerance) using cron.
+
 ## Settings
 
 Edit `read-gps.lua` to modify several settings.
