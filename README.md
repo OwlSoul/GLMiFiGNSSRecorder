@@ -33,7 +33,7 @@ In case POWER_ON_CYCLE_FILE is missing, this mechanics is not used.
 
 ## Store data format
 
-Data is stored as a text file in the OUTPUT_FOLDER location (default - `~/GNSSData`), files are named like this: `NSS_2020-01-25_17-47-18.txt`. Each line terminates with `\n` character. Line structure is the following:
+Data is stored as a text file in the OUTPUT_FOLDER location (default is `~/GNSSData`), files are named like this: `NSS_2020-01-25_17-47-18.txt`. Each line terminates with `\n` character. Line structure is the following:
 ```
 <POWER_ON_CYCLE>;<TIMESTAMP>;GNSS DATA <\n>
 ```
