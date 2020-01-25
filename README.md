@@ -27,7 +27,7 @@ Edit `read-gps.lua` to modify several settings.
 
 ## Power-on-cycle feature
 
-Since Gl MiFi defice does not have an internal clock, it relies on NTP for obtaining the time data. While you can definitely obtain data vis GNSS as well, this script still utilisez "power-on-cycle" feature. Each boot, the POWER_ON_CYCLE_FILE (/root/Scripts/PowerOnCycle/data/cycle) is increased by one. GNSS reader reads this value and stores together with GNSS data.
+Since Gl MiFi defice does not have an internal clock, it relies on NTP for obtaining the time data. While you can definitely obtain data vis GNSS as well, this script still utilizes "power-on-cycle" feature support. Each boot, the POWER_ON_CYCLE_FILE (/root/Scripts/PowerOnCycle/data/cycle) is increased by one by a separate script, which is not a part of this repository. GNSS reader reads this value and stores together with GNSS data.
 
 In case POWER_ON_CYCLE_FILE is missing, this mechanics is not used.
 
@@ -39,11 +39,21 @@ Data is stored as a text file, each line terminates with `\n` character. Line st
 ```
 
 Examples:
+
+No GNSS fix
 ```
 11;1579961537;$GPGSA,A,1,,,,,,,,,,,,,,,*1E
 11;1579961537;$GPGGA,,,,,,0,,,,,,,,*66
 11;1579961537;$GPRMC,,V,,,,,,,,,,N*53
 11;1579961538;$GPVTG,,T,,M,,N,,K,N*2C
+```
+
+No Power-On-Cycle file found
+```
+-;1579961537;$GPGSA,A,1,,,,,,,,,,,,,,,*1E
+-;1579961537;$GPGGA,,,,,,0,,,,,,,,*66
+-;1579961537;$GPRMC,,V,,,,,,,,,,N*53
+-;1579961538;$GPVTG,,T,,M,,N,,K,N*2C
 ```
 
 ## Licence
