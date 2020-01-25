@@ -1,0 +1,2 @@
+# This is a cron job to check for GNSS recorder and restart it if it fails
+* * * * * pgrep read-gps.lua || /root/Scripts/GNSSRecorder/src/read-gps.lua &

@@ -1,0 +1,9 @@
+# This is a part of /etc/rc.local to be executed on startup, this will launch GNSS recording
+
+GNSS_RECORDER_PATH="/root/Scripts/GNSSRecorder/src"
+
+logger "Enabling GNSS receiver!"
+$GNSS_RECORDER_PATH/start-gps.sh
+
+logger "Starting GNSS recording"
+pgrep read-gps.lua || $GNSS_RECORDER_PATH/read-gps.lua &
