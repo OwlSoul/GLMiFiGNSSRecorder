@@ -38,9 +38,9 @@ Data is stored as a text file, each line terminates with `\n` character. Line st
 <POWER_ON_CYCLE>;<TIMESTAMP>;GNSS DATA <\n>
 ```
 
-Examples:
+### Examples:
 
-No GNSS fix
+#### No GNSS fix
 ```
 11;1579961537;$GPGSA,A,1,,,,,,,,,,,,,,,*1E
 11;1579961537;$GPGGA,,,,,,0,,,,,,,,*66
@@ -48,7 +48,7 @@ No GNSS fix
 11;1579961538;$GPVTG,,T,,M,,N,,K,N*2C
 ```
 
-No Power-On-Cycle file found
+#### No Power-On-Cycle file found
 ```
 -;1579961537;$GPGSA,A,1,,,,,,,,,,,,,,,*1E
 -;1579961537;$GPGGA,,,,,,0,,,,,,,,*66
