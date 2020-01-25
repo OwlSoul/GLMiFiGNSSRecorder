@@ -25,9 +25,9 @@ Edit `read-gps.lua` to modify several settings.
 | Variable | Explaination |
 | ----- | ----- |
 | GNSS_FILENAME | The file name of GNSS receiver, /dev/ttyUSB1 by default |
-| OUTPUT_FOLDER | The folder where to store GNSS data |
+| OUTPUT_FOLDER | The folder where to store GNSS data, default is ~/GNSSData |
 | POWER_ON_CYCLE_FILE | File with power-on state (read below) |
-| STORE_FREQUENCY | How often to write GNSS data on disk |
+| STORE_FREQUENCY | How often to write GNSS data on disk, in seconds, default is 60 |
 
 ## Power-on-cycle feature
 
