@@ -56,6 +56,11 @@ Data is stored as a text file, each line terminates with `\n` character. Line st
 -;1579961538;$GPVTG,,T,,M,,N,,K,N*2C
 ```
 
+## GPS Fix 
+```
+INSERT LATER
+```
+
 ## Licence
 
 This little project is distributed under MIT licence.
