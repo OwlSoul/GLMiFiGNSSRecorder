@@ -73,6 +73,18 @@ Each line terminates with `\n` character. Line structure is the following:
 1579974430;$GPVTG,21.4,T,12.4,M,0.0,N,0.0,K,A*23
 ```
 
+## GL MiFi EC25 GNSS known published NMEA sentences
+
+These are the sentences encoundered so far:
+
+| Sentence | Notes |
+|   -----  | ----- |
+| GPRMC    | Minimum recommended data |
+| GPGSA    | Overall satellite reception data |
+| GPGGA    | Fix data |
+| GPVTG    | Vector track and speed over ground |
+| GPGSV    | Detailed satellite data |
+
 ## Useful links
 
 - [NMEA to Track converter and visualizer](www.mygeodata.cloud)
