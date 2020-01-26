@@ -2,6 +2,8 @@
 
 GL MiFi with EC25 4G receiver has an embedded GNSS recorder. This is a small lua script to record the data from GNSS and store it once per minute on SD card.
 
+**Note:** You need an antenna for EC25 GNSS receiver to work. By default GL MiFi comes without one.
+
 ## Install
 
 Just copy the `src` folder to any place you like. You can check `deploy.sh` for an example.
