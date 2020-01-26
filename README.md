@@ -8,11 +8,19 @@ Just copy the `src` folder to any place you like. You can check `deploy.sh` for 
 
 ## Scripts
 
+### Data collection scripts
+
 | Script | Explaination |
 | ----- | ----- |
 | start-gps.sh | Sends the command to start GNSS recorder, data will be published in /dev/ttyUSB1 |
 | stop-gps.sh  | Sends the command to stop GNSS recorder |
 | read-gps.lua | Reads GNSS data from /dev/ttyUSB1, stores it once per minute |
+
+### Data processing scripts
+| Script | Explaination |
+| ----- | ----- |
+| extract-track | Simply extracts the NMEA data from track file (cuts out timestamps) |
+
 
 ## Launch
 
@@ -37,35 +45,38 @@ In case POWER_ON_CYCLE_FILE is missing, this mechanics is not used.
 
 ## Store data format
 
-Data is stored as a text file in the OUTPUT_FOLDER location (default is `~/GNSSData`), files are named like this: `NSS_2020-01-25_17-47-18.txt`.
+Data is stored as a text file in the OUTPUT_FOLDER location (default is `~/GNSSData`), files are named like this: `GNSS_14_2020-01-25_17-03-00.txt`, where 
+14 is the power-on-cycle number, and 2020-01-25_17-03-00 is the time when track started recording.
 
 Each line terminates with `\n` character. Line structure is the following:
 ```
-<POWER_ON_CYCLE>;<TIMESTAMP>;GNSS DATA <\n>
+<TIMESTAMP>;GNSS DATA <\n>
 ```
 
 ### Examples:
 
 #### No GNSS fix
 ```
-11;1579961537;$GPGSA,A,1,,,,,,,,,,,,,,,*1E
-11;1579961537;$GPGGA,,,,,,0,,,,,,,,*66
-11;1579961537;$GPRMC,,V,,,,,,,,,,N*53
-11;1579961538;$GPVTG,,T,,M,,N,,K,N*2C
-```
-
-#### No Power-On-Cycle file found
-```
--;1579961537;$GPGSA,A,1,,,,,,,,,,,,,,,*1E
--;1579961537;$GPGGA,,,,,,0,,,,,,,,*66
--;1579961537;$GPRMC,,V,,,,,,,,,,N*53
--;1579961538;$GPVTG,,T,,M,,N,,K,N*2C
+1579961537;$GPGSA,A,1,,,,,,,,,,,,,,,*1E
+1579961537;$GPGGA,,,,,,0,,,,,,,,*66
+1579961537;$GPRMC,,V,,,,,,,,,,N*53
+1579961538;$GPVTG,,T,,M,,N,,K,N*2C
 ```
 
 #### GPS Fix 
 ```
-INSERT LATER
+1579974429;$GPGSA,A,2,05,07,11,13,15,20,28,30,,,,,1.0,0.7,0.7*3D
+1579974430;$GPGSV,3,1,10,05,10,227,22,07,25,098,27,08,19,037,16,11,15,074,28*73
+1579974430;$GPGSV,3,2,10,13,64,264,21,15,38,296,32,17,11,157,20,20,08,336,32*73
+1579974430;$GPGSV,3,3,10,28,70,172,24,30,59,101,28*72
+1579974430;$GPGGA,115948.00,5615.617024,N,03725.802986,E,1,09,0.7,232.9,M,15.0,M,,*63
+1579974430;$GPVTG,21.4,T,12.4,M,0.0,N,0.0,K,A*23
 ```
+
+## Useful links
+
+- [NMEA to Track converter and visualizer](www.mygeodata.cloud)
+- [GPRMC and GPGGA decoder with map](https://rl.se/gprmc)
 
 ## Licence
 

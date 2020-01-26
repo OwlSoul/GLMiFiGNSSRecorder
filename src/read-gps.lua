@@ -26,7 +26,7 @@ local EXIT_CODE_FAILED_TO_OPEN_FILE = 1
 local isRunning = true
 
 -- Power-on cycle by default
-local powerOnCycle = "-"
+local powerOnCycle = "X"
 
 -- ----------------------------- FUNCTIONS --------------------------------- --
 
@@ -60,6 +60,9 @@ else
 	print("Failed to read power-on cycle, Error: " .. eMessage .. ", Code: " .. tostring(eCode))
 end
 
+-- Setting output filename
+local outputFilename = OUTPUT_FOLDER .. "/" .. "GNSS_" .. tostring(powerOnCycle) .. "_" ..
+                       os.date('%Y-%m-%d_%H-%M-%S') .. ".txt"
 
 -- Set starting time
 local startingTime = os.time()
@@ -87,23 +90,20 @@ print("Getting the response")
 while isRunning do
 	local response = gnssFile:read("*l")
 	if response ~= "" and response ~= nil then
-	    table.insert(dataBuffer,  powerOnCycle .. ";" .. os.time() .. ";" .. response)
+	    table.insert(dataBuffer, os.time() .. ";" .. response)
 	    print("[" .. os.date('%Y-%m-%d %H:%M:%S') .. "]: " .. response)
 	end
 
 	-- Write received data to the file
         local currentTime = os.time()
-        local currentDate = os.date('%Y-%m-%d_%H-%M-%S')
 	if os.time() - startingTime >= STORE_FREQUENCY then
-           startingTime = currentTime
-		local filename = "GNSS_" .. currentDate .. ".txt"
-		print("Storing GNSS data in the file " .. filename .. " ...")
-        	local fullFilename = OUTPUT_FOLDER .. "/" .. filename
-		local dataFile, errorMsg, errCode = io.open(fullFilename, "w")
-        	if dataFile == nil then
-               print("Failed to open " .. fullFilename .. ", error: " ..
+        startingTime = currentTime
+		print("Storing GNSS data in the file " .. outputFilename .. " ...")
+		local dataFile, errorMsg, errCode = io.open(outputFilename, "a")
+			if dataFile == nil then
+               print("Failed to open " .. outputFilename .. ", error: " ..
                tostring(errCode) .. " " .. tostring(errorMsg))
-        	else
+			else
                for _key, line in pairs(dataBuffer) do
 	           dataFile:write(line .. "\n")
 			end
