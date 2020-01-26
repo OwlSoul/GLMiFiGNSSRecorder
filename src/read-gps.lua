@@ -96,20 +96,21 @@ while isRunning do
         local currentDate = os.date('%Y-%m-%d_%H-%M-%S')
 	if os.time() - startingTime >= STORE_FREQUENCY then
            startingTime = currentTime
-	   local filename = "GNSS_" .. currentDate .. ".txt"
-	   print("Storing GNSS data in the file " .. filename .. " ...")
-           local fullFilename = OUTPUT_FOLDER .. "/" .. filename
-	   local dataFile, errorMsg, errCode = io.open(fullFilename, "w")
-           if dataFile == nil then
+		local filename = "GNSS_" .. currentDate .. ".txt"
+		print("Storing GNSS data in the file " .. filename .. " ...")
+        	local fullFilename = OUTPUT_FOLDER .. "/" .. filename
+		local dataFile, errorMsg, errCode = io.open(fullFilename, "w")
+        	if dataFile == nil then
                print("Failed to open " .. fullFilename .. ", error: " ..
                tostring(errCode) .. " " .. tostring(errorMsg))
-           else
+        	else
                for _key, line in pairs(dataBuffer) do
 	           dataFile:write(line .. "\n")
-	       end
-               dataFile:close()
-               print("Data stored successfully!")
-           end
+			end
+			dataFile:close()
+			dataBuffer = {}                           -- Clear data buffer
+            print("Data stored successfully!")
+        end
 	end
 end
 
