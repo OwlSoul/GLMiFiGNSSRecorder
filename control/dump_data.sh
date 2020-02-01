@@ -15,6 +15,6 @@ ssh -p "$PORT" "$HOST" "mkdir -p $INTERMEDIATE_DIR && mv $DATA_DIR/*.txt $INTERM
 echo -e "Copying GNSS tracks"
 scp -r -P "$PORT" "$HOST:$INTERMEDIATE_DIR/"'*' "$TARGET_DIR"
 echo -e "Removing the GNSS directory"
-#ssh -p "$PORT" "$HOST" "rm -rf $INTERMEDIATE_DIR"
+ssh -p "$PORT" "$HOST" "rm -rf $INTERMEDIATE_DIR"
 echo -e "GNSS tracks transfer complete!"
 echo -e ""
