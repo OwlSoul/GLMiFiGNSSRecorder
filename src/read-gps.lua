@@ -39,6 +39,11 @@ local function sigintHandler(_sig, _frm)
 	isRunning = false
 end
 
+local function fileExists(name)
+	local f=io.open(name,"r")
+	if f~=nil then io.close(f) return true else return false end
+end
+
 -- ------------------------------- MAIN ------------------------------------ --
 
 -- Disable io buffering
@@ -95,10 +100,16 @@ while isRunning do
 	end
 
 	-- Write received data to the file
-        local currentTime = os.time()
+    local currentTime = os.time()
 	if os.time() - startingTime >= STORE_FREQUENCY then
         startingTime = currentTime
 		print("Storing GNSS data in the file " .. outputFilename .. " ...")
+		-- Check if file exists
+		if not fileExists(outputFilename) then
+			-- Create new filename if file does not exist
+			outputFilename = OUTPUT_FOLDER .. "/" .. "GNSS_" .. tostring(powerOnCycle) .. "_" ..
+                       os.date('%Y-%m-%d_%H-%M-%S') .. ".txt"
+		end
 		local dataFile, errorMsg, errCode = io.open(outputFilename, "a")
 			if dataFile == nil then
                print("Failed to open " .. outputFilename .. ", error: " ..

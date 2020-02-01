@@ -2,7 +2,8 @@
 
 # Dumps the track to the database (PostgreSQL)
 
-INPUT_FILE = "../data/GNSS_2020-01-25_23-54-55.txt"
+INPUT_FILE = "../data/GNSS_01_2020-01-25_23-54-55.txt"
+
 
 if __name__ == '__main__':
     with open(INPUT_FILE, "r") as f:
