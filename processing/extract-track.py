@@ -3,7 +3,7 @@
 # Simple data processing, extraction of GPGGA and GPRMC entries
 
 # Source filename
-FILENAME = "../data/GNSS_2020-01-25_23-54-55.txt"
+FILENAME = "../data/GNSS_28_2020-01-27_00-28-25.txt"
 
 # Output filename
 OUTFILE = "../output/track.nmea"
