@@ -347,7 +347,7 @@ def read_gpgsa(sentence, timestamp, do_print=False):
 
 def read_gpgsv(sentence, timestamp, do_print=False):
     """ Read and parse GPGSV message"""
-    values = sentence.split(',')
+    values = sentence.split('*')[0].split(',')
     result = {}
 
     # Linux timestamp
@@ -357,14 +357,48 @@ def read_gpgsv(sentence, timestamp, do_print=False):
         result['linux_stamp'] = 0
     result['linux_date'] = datetime.fromtimestamp(result['linux_stamp'], tz=pytz.UTC)
 
+    result['satellites'] = []
+    for i in range(0, 4):
+        try:
+            satellite = {}
+            try:
+                satellite['prn'] = int(values[i*4 + 4])
+            except:
+                continue
+
+            try:
+                satellite['elevation'] = float(values[i*4 + 5]) 
+            except:
+                satellite['elevation'] = None
+
+            try:
+                satellite['azimuth'] = float(values[i*4 + 6])
+            except:
+                satellite['azimuth'] = None
+                
+            try:
+                satellite['snr'] = float(values[i*4 + 7])
+            except:
+                satellite['snr'] = None
+
+            result['satellites'].append(satellite)
+        except Exception as e:
+            print(e)
+
     if do_print:
         print("Linux timestamp   :", result['linux_stamp'])
         print("Linux datetime    :", result['linux_date'])
+        for sat in result['satellites']:
+            print("  PRN:", str(sat['prn']), \
+                "Elevation:", str(sat['elevation']), \
+                "Azimuth:", str(sat['azimuth']), \
+                "SNR:", str(sat['snr']))
         print("")
-    
+        
     return result
 
 if __name__ == '__main__':
+    print("Processing track data...")
     totaldata = {}
     with open(INPUT_FILE, "r") as f:
         for line in f.readlines():
@@ -387,7 +421,7 @@ if __name__ == '__main__':
                     gpvtg = read_gpvtg(sentence[1], sentence[0], do_print=False)
                     totaldata[sentence[0]]['gpvtg'].append(gpvtg)
                 if sentence[1].startswith("$GPGSA"):
-                    gpgsa = read_gpgsa(sentence[1], sentence[0], do_print=True)
+                    gpgsa = read_gpgsa(sentence[1], sentence[0], do_print=False)
                     totaldata[sentence[0]]['gpgsa'].append(gpgsa)
                 if sentence[1].startswith("$GPGSV"):
                     gpgsv = read_gpgsv(sentence[1], sentence[0], do_print=False)
@@ -423,9 +457,14 @@ if __name__ == '__main__':
     print("              2D FIX points         : " + str(fix_percentage[2]))
     print("              3D FIX points         : " + str(fix_percentage[3]))
     
-    #for key, entry in totaldata.items():
-    #    print(key, entry)
-    #    print()
+    for key, entry in totaldata.items():
+        print(key)
+    #    print("GPRMC", entry['gprmc'])
+    #    print("GPGGA", entry['gpgga'])
+    #    print("GPVTG", entry['gpvtg'])
+    #    print("GPGSA", entry['gpgsa'])
+        print("GPGSV", entry['gpgsv'])
+        print()
 
     print()
     print("Track dumped successfully!")
