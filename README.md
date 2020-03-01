@@ -90,7 +90,7 @@ These are the sentences encoundered so far:
 
 ## Useful links
 
-- [NMEA to Track converter and visualizer](www.mygeodata.cloud)
+- [NMEA to Track converter and visualizer](https://www.mygeodata.cloud)
 - [GPRMC and GPGGA decoder with map](https://rl.se/gprmc)
 - [NMEA Sentences explained](https://www.gpsinformation.org/dale/nmea.htm)
 
