@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
 
-# Dumps the track to the database (PostgreSQL)
+"""Dumps the track to the database (PostgreSQL)"""
+
+# Disable "bare-except" for pylint, we don't care about best practices here,
+# we either want data if it is present, or don't care about it if it is not or broken.
+# pylint: disable = W0702
 
 from datetime import datetime
 import pytz
-import math
 
 INPUT_FILE = "../data/GNSS_28_2020-01-27_00-28-25.txt"
 
 def nmea_to_degrees(data):
+    """ Convert NMEA coordinates to degrees """
+    # pylint: disable = C0103
     DD = int(float(data)/100)
     SS = float(data) - DD * 100
     return DD + SS/60
+    # pylint: enable = C0103
 
 def read_gprmc(sentence, timestamp, do_print=False):
     """ Read and parse GPRMC message"""
@@ -26,7 +32,7 @@ def read_gprmc(sentence, timestamp, do_print=False):
     result['linux_date'] = datetime.fromtimestamp(result['linux_stamp'], tz=pytz.UTC)
 
     # Validity
-    try:    
+    try:
         result['validity'] = str(values[2])
     except:
         result['validity'] = None
@@ -34,7 +40,7 @@ def read_gprmc(sentence, timestamp, do_print=False):
     # Latitude
     try:
         result['latitude'] = float(values[3])
-        result['latitude_deg'] = nmea_to_degrees(result['latitude']) if values[4]=='N' else -nmea_to_degrees(result['latitude'])
+        result['latitude_deg'] = nmea_to_degrees(result['latitude']) if values[4] == 'N' else -nmea_to_degrees(result['latitude'])
     except:
         result['latitude'] = None
         result['latitude_deg'] = None
@@ -42,7 +48,7 @@ def read_gprmc(sentence, timestamp, do_print=False):
     # Longitude
     try:
         result['longitude'] = float(values[5])
-        result['longitude_deg']= nmea_to_degrees(result['longitude']) if values[6]=='E' else nmea_to_degrees(result['longitude']) 
+        result['longitude_deg'] = nmea_to_degrees(result['longitude']) if values[6] == 'E' else nmea_to_degrees(result['longitude'])
     except:
         result['longitude'] = None
         result['longitude_deg'] = None
@@ -52,7 +58,7 @@ def read_gprmc(sentence, timestamp, do_print=False):
         result['speed_knots'] = float(values[7])
     except:
         result['speed_knots'] = None
-    
+
     # True course
     try:
         result['true_course'] = float(values[8])
@@ -89,12 +95,12 @@ def read_gprmc(sentence, timestamp, do_print=False):
         ts_micro = int(result['timestamp'][7:])
 
         result['actual_date'] = datetime(year=ts_year, month=ts_month, day=ts_day,
-                                         hour=ts_hours,minute=ts_mins,second=ts_sec,microsecond=ts_micro,
+                                         hour=ts_hours, minute=ts_mins, second=ts_sec, microsecond=ts_micro,
                                          tzinfo=pytz.UTC)
-    except Exception as e:
+    except:
         result['actual_date'] = None
-    result['actual_timestamp'] = datetime.timestamp(result['actual_date'])   
-    
+    result['actual_timestamp'] = datetime.timestamp(result['actual_date'])
+
     if do_print and result['validity'] == 'A':
         print("Linux timestamp :", result['linux_stamp'])
         print("Linux datetime  :", result['linux_date'])
@@ -141,7 +147,7 @@ def read_gpgga(sentence, timestamp, do_print=False):
     # Latitude
     try:
         result['latitude'] = float(values[2])
-        result['latitude_deg'] = nmea_to_degrees(result['latitude']) if values[3]=='N' else -nmea_to_degrees(result['latitude'])
+        result['latitude_deg'] = nmea_to_degrees(result['latitude']) if values[3] == 'N' else -nmea_to_degrees(result['latitude'])
     except:
         result['latitude'] = None
         result['latitude_deg'] = None
@@ -149,7 +155,7 @@ def read_gpgga(sentence, timestamp, do_print=False):
     # Longitude
     try:
         result['longitude'] = float(values[4])
-        result['longitude_deg']= nmea_to_degrees(result['longitude']) if values[5]=='E' else nmea_to_degrees(result['longitude']) 
+        result['longitude_deg'] = nmea_to_degrees(result['longitude']) if values[5] == 'E' else nmea_to_degrees(result['longitude'])
     except:
         result['longitude'] = None
         result['longitude_deg'] = None
@@ -208,7 +214,7 @@ def read_gpgga(sentence, timestamp, do_print=False):
         print("  Diff last update:", result['diff_last_update'])
         print("  Diff ref station:", result['diff_reference_station'])
         print("")
-    
+
     return result
 
 def read_gpvtg(sentence, timestamp, do_print=False):
@@ -240,7 +246,7 @@ def read_gpvtg(sentence, timestamp, do_print=False):
         result['groundspeed_knots'] = float(values[5])
     except:
         result['groundspeed_knots'] = None
-    
+
     # Groundspeed, km/h
     try:
         result['groundspeed_kmh'] = float(values[7])
@@ -261,7 +267,7 @@ def read_gpvtg(sentence, timestamp, do_print=False):
             print("  Ground spd, knot:", result['groundspeed_knots'])
             print("  Ground spd, km/h:", result['groundspeed_kmh'])
             print("")
-    
+
     return result
 
 def read_gpgsa(sentence, timestamp, do_print=False):
@@ -295,7 +301,7 @@ def read_gpgsa(sentence, timestamp, do_print=False):
             try:
                 sat_no = int(values[sat])
                 result['fix_satellites'].append(sat_no)
-            except Exception as e:
+            except:
                 pass
     except:
         result['fix_satellites'] = None
@@ -330,19 +336,19 @@ def read_gpgsa(sentence, timestamp, do_print=False):
         print("  Fix type        :", result['fix_type'])
         print("  Satellites count:", result['fix_sat_count'])
         print("  Fix satellites  :", end=" ")
-        if result['fix_satellites'] == None:
+        if result['fix_satellites'] is None:
             print("NONE")
         elif len(result['fix_satellites']) == 0:
             print("EMPTY")
         else:
             for sat in result['fix_satellites']:
                 print(sat, end=" ")
-            print()       
+            print()
         print("  PDOP            :", result['pdop'])
         print("  HDOP            :", result['hdop'])
         print("  VDOP            :", result['vdop'])
         print()
-    
+
     return result
 
 def read_gpgsv(sentence, timestamp, do_print=False):
@@ -367,7 +373,7 @@ def read_gpgsv(sentence, timestamp, do_print=False):
                 continue
 
             try:
-                satellite['elevation'] = float(values[i*4 + 5]) 
+                satellite['elevation'] = float(values[i*4 + 5])
             except:
                 satellite['elevation'] = None
 
@@ -375,15 +381,15 @@ def read_gpgsv(sentence, timestamp, do_print=False):
                 satellite['azimuth'] = float(values[i*4 + 6])
             except:
                 satellite['azimuth'] = None
-                
+
             try:
                 satellite['snr'] = float(values[i*4 + 7])
             except:
                 satellite['snr'] = None
 
             result['satellites'].append(satellite)
-        except Exception as e:
-            print(e)
+        except:
+            pass
 
     if do_print:
         print("Linux timestamp   :", result['linux_stamp'])
@@ -394,7 +400,7 @@ def read_gpgsv(sentence, timestamp, do_print=False):
                 "Azimuth:", str(sat['azimuth']), \
                 "SNR:", str(sat['snr']))
         print("")
-        
+
     return result
 
 if __name__ == '__main__':
@@ -405,49 +411,47 @@ if __name__ == '__main__':
             try:
                 sentence = line.strip().split(';')
                 if not sentence[0] in totaldata:
-                        totaldata[sentence[0]] = {'gprmc' : [],
-                                                  'gpgga' : [],
-                                                  'gpgsa' : [],
-                                                  'gpvtg' : [],
-                                                  'gpgsv' : []
-                                                 }
+                    totaldata[sentence[0]] = {'gprmc' : None,
+                                              'gpgga' : None,
+                                              'gpgsa' : None,
+                                              'gpvtg' : None,
+                                              'gpgsv' : []
+                                             }
                 if sentence[1].startswith("$GPRMC"):
                     gprmc = read_gprmc(sentence[1], sentence[0], do_print=False)
-                    totaldata[sentence[0]]['gprmc'].append(gprmc)
+                    totaldata[sentence[0]]['gprmc'] = gprmc
                 if sentence[1].startswith("$GPGGA"):
                     gpgga = read_gpgga(sentence[1], sentence[0], do_print=False)
-                    totaldata[sentence[0]]['gpgga'].append(gpgga)
+                    totaldata[sentence[0]]['gpgga'] = gpgga
                 if sentence[1].startswith("$GPVTG"):
                     gpvtg = read_gpvtg(sentence[1], sentence[0], do_print=False)
-                    totaldata[sentence[0]]['gpvtg'].append(gpvtg)
+                    totaldata[sentence[0]]['gpvtg'] = gpvtg
                 if sentence[1].startswith("$GPGSA"):
                     gpgsa = read_gpgsa(sentence[1], sentence[0], do_print=False)
-                    totaldata[sentence[0]]['gpgsa'].append(gpgsa)
+                    totaldata[sentence[0]]['gpgsa'] = gpgsa
                 if sentence[1].startswith("$GPGSV"):
                     gpgsv = read_gpgsv(sentence[1], sentence[0], do_print=False)
                     totaldata[sentence[0]]['gpgsv'].append(gpgsv)
-            except Exception as e:
+            except:
                 pass
-    
+
     print()
     print("TRACK ANALYSIS:")
 
     # Calculate valid datapoints
     valid_points = 0
     for key, entry in totaldata.items():
-        if (not entry['gpgga'] is None):
-            for record in entry['gpgga']:
-                if (not record['fix'] is None) and record['fix'] == 1:
-                    valid_points += 1
+        if not entry['gpgga'] is None:
+            if (not entry['gpgga']['fix'] is None) and entry['gpgga']['fix'] == 1:
+                valid_points += 1
 
     # Fix percentage
     fix_percentage = {0: 0, 1: 0, 2: 0, 3: 0}
     for key, entry in totaldata.items():
-        if (not entry['gpgsa'] is None):
-            for record in entry['gpgsa']:
-                if (not record['fix_type'] is None):
-                    if record['fix_type'] in fix_percentage:
-                        fix_percentage[record['fix_type']] += 1
+        if not entry['gpgsa'] is None:
+            if not entry['gpgsa']['fix_type'] is None:
+                if entry['gpgsa']['fix_type'] in fix_percentage:
+                    fix_percentage[entry['gpgsa']['fix_type']] += 1
 
 
     # Print analytics
@@ -456,13 +460,15 @@ if __name__ == '__main__':
     print("              NO FIX points         : " + str(fix_percentage[1]))
     print("              2D FIX points         : " + str(fix_percentage[2]))
     print("              3D FIX points         : " + str(fix_percentage[3]))
-    
+
+    # At this point, we have parsed GNSS track into totaldata, next we can do anything we want with it
+
     for key, entry in totaldata.items():
         print(key)
-    #    print("GPRMC", entry['gprmc'])
-    #    print("GPGGA", entry['gpgga'])
-    #    print("GPVTG", entry['gpvtg'])
-    #    print("GPGSA", entry['gpgsa'])
+        print("GPRMC", entry['gprmc'])
+        print("GPGGA", entry['gpgga'])
+        print("GPVTG", entry['gpvtg'])
+        print("GPGSA", entry['gpgsa'])
         print("GPGSV", entry['gpgsv'])
         print()
 

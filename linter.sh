@@ -11,4 +11,7 @@ luacheck src/*.lua \
 echo -e "\nChecking sh files"
 shellcheck -a src/start-gps.sh
 
+echo -e "\nChecking python files, PROCESSING:"
+pylint processing/dump-track.py
+
 echo -e "\nDone!"
